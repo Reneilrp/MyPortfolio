@@ -1,0 +1,14 @@
+CREATE DATABASE admin;
+
+use DATABASE admin;
+
+CREATE TABLE admin (
+    id INT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL 
+);
+
+INSERT INTO admin (id, username, password) VALUES 
+(1, "Pheinz", "Pheinz0997")
+
+

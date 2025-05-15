@@ -1,0 +1,116 @@
+
+  
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2>Dashboard</h2>
+                <div class="breadcrumb">
+                    <a href="dashboard.php">Home</a> / Dashboard
+                </div>
+            </div>
+            
+            <!-- Dashboard Cards -->
+            <div class="dashboard-cards">
+                <?php
+                // Get count of skills
+                $sql = "SELECT COUNT(*) as skill_count FROM skills";
+                $result = mysqli_query($link, $sql);
+                $skill_count = 0;
+                if($result){
+                    $row = mysqli_fetch_assoc($result);
+                    $skill_count = $row['skill_count'];
+                }
+                
+                // Get count of projects
+                $sql = "SELECT COUNT(*) as project_count FROM projects";
+                $result = mysqli_query($link, $sql);
+                $project_count = 0;
+                if($result){
+                    $row = mysqli_fetch_assoc($result);
+                    $project_count = $row['project_count'];
+                }
+                
+                // Get count of contact messages
+                $sql = "SELECT COUNT(*) as message_count FROM messages";
+                $result = mysqli_query($link, $sql);
+                $message_count = 0;
+                if($result){
+                    $row = mysqli_fetch_assoc($result);
+                    $message_count = $row['message_count'];
+                }
+                ?>
+                
+                <div class="card card-skills">
+                    <div class="card-header">
+                        <h3 class="card-title">Skills</h3>
+                        <div class="card-icon">🔧</div>
+                    </div>
+                    <div class="card-value"><?php echo $skill_count; ?></div>
+                    <div class="card-label">Total Skills</div>
+                    <div class="card-footer">
+                        <a href="skills.php">Manage Skills →</a>
+                    </div>
+                </div>
+                
+                <div class="card card-projects">
+                    <div class="card-header">
+                        <h3 class="card-title">Projects</h3>
+                        <div class="card-icon">📁</div>
+                    </div>
+                    <div class="card-value"><?php echo $project_count; ?></div>
+                    <div class="card-label">Total Projects</div>
+                    <div class="card-footer">
+                        <a href="projects.php">Manage Projects →</a>
+                    </div>
+                </div>
+                
+                <div class="card card-contacts">
+                    <div class="card-header">
+                        <h3 class="card-title">Messages</h3>
+                        <div class="card-icon">📞</div>
+                    </div>
+                    <div class="card-value"><?php echo $message_count; ?></div>
+                    <div class="card-label">Contact Messages</div>
+                    <div class="card-footer">
+                        <a href="contacts.php">Manage Contacts →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Recent Activities -->
+            <div class="recent-activities">
+                <div class="recent-header">
+                    <h3 class="recent-title">Recent Activities</h3>
+                </div>
+                
+                <ul class="activity-list">
+                    <?php
+                    // Get recent activities (for example purposes)
+                    $sql = "SELECT * FROM activity_log ORDER BY created_at DESC LIMIT 5";
+                    $result = mysqli_query($link, $sql);
+                    
+                    if($result && mysqli_num_rows($result) > 0){
+                        while($row = mysqli_fetch_assoc($result)){
+                            $icon_class = "activity-edit";
+                            if($row['action_type'] == 'add'){
+                                $icon_class = "activity-add";
+                            } else if($row['action_type'] == 'delete'){
+                                $icon_class = "activity-delete";
+                            }
+                            
+                            echo '<li class="activity-item">
+                                <div class="activity-icon '.$icon_class.'">
+                                    ' . ($row['action_type'] == 'add' ? '+' : ($row['action_type'] == 'delete' ? '×' : '✎')) . '
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-title">' . htmlspecialchars($row['description']) . '</div>
+                                    <div class="activity-time">' . date('F j, Y, g:i a', strtotime($row['created_at'])) . '</div>
+                                </div>
+                            </li>';
+                        }
+                    } else {
+                        echo '<li class="activity-item">No recent activities found.</li>';
+                    }
+                    ?>
+                </ul>
+            </div>
+        </main>
